@@ -1,14 +1,45 @@
-<h1>{{application_name}}</h1>
-<h5>Made for Platform-based Programming Assignment by {{name}}</h5>
-<h4>Item name: </h4>
-<p> {{ item_name }} </p>
-<h4>Season: </h4>
-<p> {{ season }} </p>
-<h4>Description: </h4>
-<p>{{ description }}</p>
-<h4>Favorable Weather: </h4>
-<p>{{ favorable_weather }}</p>
-<h4>Amount: </h4>
-<p>{{ amount }}</p>
-<h4>Price: </h4>
-<p> {{ price }} </p>
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1>{{application_name}}</h1>
+    <h5>Made for Platform-based Programming Assignment by {{name}} {{class}} class</h5>
+    <table>
+        <tr>
+            <th>Name</th>
+            <th>Price</th>
+            <th>Description</th>
+            <th>Season</th>
+            <th>Favorable Weather</th>
+            <th>Amount</th>
+            <th>Date Added</th>
+        </tr>
+
+        {% comment %} Berikut cara memperlihatkan data produk di bawah baris ini {% endcomment %}
+
+        {% for item in items %}
+            <tr>
+                <td>{{item.name}}</td>
+                <td>{{item.price}}</td>
+                <td>{{item.description}}</td>
+                <td>{{item.season}}</td>
+                <td>{{item.favorable_weather}}</td>
+                <td>{{item.amount}}</td>
+                <td>{{item.date_added}}</td>
+            </tr>
+        {% endfor %}
+    </table>
+
+    <br />
+
+    <a href="{% url 'main:create_product' %}">
+        <button>
+            Add New Product
+        </button>
+    </a>
+
+    <a href="{% url 'main:delete_item' %}">
+        <button>
+            Delete item
+        </button>
+    </a>
+{% endblock content %}

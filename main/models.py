@@ -9,6 +9,8 @@ class Item(models.Model):
     price = models.IntegerField()
     description = models.TextField()
     amount = models.IntegerField()
+    date_added = models.DateField(auto_now_add=True)
+
 
     def calculate_total(self):
         return self.price * self.amount
