@@ -91,8 +91,13 @@ urlpatterns = [
 ```
 
 *Screenshot-screenshot* akses kelima URL menggunakan Postman dapat dilihat di bawah
+### XML
 ![XML](image.png)
+### JSON
 ![JSON](image-1.png)
+### XML by ID
 ![XML by ID](image-2.png)
+### JSON by ID
 ![JSON by ID](image-3.png)
+### HTML
 ![HTML](image-4.png)
