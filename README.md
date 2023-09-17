@@ -55,3 +55,44 @@ v
 - MVC (Model-View-Controller): Konsep arsitektur yang digunakan dalam pengembangan web dengan memisahkan *Model*, *View*, dan *Controller*. *Model* digunakan untuk menyimpan data dan logika aplikasi, *View* digunakan untuk menampilkan data dari model yang telah dibuat. *Controller* digunakan untuk menghubungkan *Model* dan *View*. MVC dapat digunakan dalam berbagai platform pengembangan perangkat lunak.
 - MVT (Model-View-Template): Konsep arsitektur yang digunakan dalam pengembangan web dengan memisahkan *Model*, *View*, dan *Template*. *Template* digunakan untuk menghubungkan *Model* dan *View*. *Model* digunakan untuk menyimpan data dan logika aplikasi, *View* digunakan untuk menampilkan data dari model yang telah dibuat. MVT adalah konsep khusus dalam Django *framework* untuk pengembangan web.
 - MVVM (Model-View-ViewModel): Konsep arsitektur yang digunakan dalam pengembangan aplikasi berbasis *user interface* (UI) dengan memisahkan *Model*, *View*, dan *ViewModel*. *Model* digunakan untuk menyimpan data dan logika aplikasi, *View* digunakan untuk menampilkan data dari model yang telah dibuat, dan *ViewModel* untuk mengelola logika dari aplikasi.MVVM dapat digunakan dalam berbagai platform pengembangan perangkat lunak.
+
+# Tugas 3
+## Apa perbedaan antara form POST dan form GET dalam Django?
+ - Salah satu Perbedaan antara `POST` dan `GET` dalam Django terletak pada visibilitas data yang akan diberikan di mana `POST` digunakan untuk mengirimkan data-data yang tersembunyi dalam permintaan HTTP dan tidak akan ditampilkan dalam URL, sedangkan `GET` digunakan untuk mengirimkan data-data yang akan ditampilkan pada URL dan dapat dilihat oleh *user*. Selain itu, perbedaan lain adalah method `GET` biasanya digunakan jika ingin mengambil data dari sebuah URL dan method `POST` digunakan untuk mengirim data-data yang bersifat sensitif.
+## Apa perbedaan utama antara XML, JSON, dan HTML dalam konteks pengiriman data?
+- Dalam pengiriman data, JSON menggunakan *key-value* atau *dict* sebagai format untuk komunikasi antar server. Sementara itu, XML dan HTML menggunakan *markup* dengan *tag* dan *attribute* yang mirip satu dengan yang lain, tetapi HTML digunakan untuk membuat tampilan halaman web, sedangkan XML digunakan untuk menyimpan dan mengirim data terstruktur dalam format teks
+## Mengapa JSON sering digunakan dalam pertukaran data antara aplikasi web modern?
+- Di antara aplikasi web modern, JSON adalah format yang sering digunakan dibandingkan format lain karena memiliki banyak kelebihan, yaitu efisiensi dalam penyimpanan data dengan *size* yang relatif kecil. Selain itu, *parser* untuk format JSON tersedia di banyak bahasa pemrograman, membuatnya mudah untuk ditulis dalam kode. JSON juga mudah dibaca oleh manusia dan mendukung tipe-tipe data standar, seperti *String* dan *Integer*.
+## Jelaskan bagaimana cara kamu mengimplementasikan checklist di atas secara step-by-step (bukan hanya sekadar mengikuti tutorial).
+- Untuk membuat *input* `form`, terlebih dahulu, saya membuat file `forms.py` lalu membuat *class* `Meta` dengan `model` yang berisikan `item` pada `models.py` dan `fields` yang berisikan: `name`, `price`, `description`, `season`, `favorable_weather`, `amount` (Sesuai dengan website yang ingin saya buat). Setelah itu, saya membuat method `create_product` yang nantinya akan menambahkan data *item* secara otomatis ketika *user* menekan tombol *submit* dari *form* dan menambahkan variabel untuk mengambil seluruh object Item yang akan disimpan pada *database* di `views.py` serta menambahkan `path` ke dalam `urls.py` agar *user* dapat mengakses dan meng-*input* produk ke dalam `form`. Lalu, saya membuat file `create_product.html` untuk membuat tampilan dari fungsi `create_product` dan mengubah tampilan `main.html` dengan menambahkan tabel agar dapat menampilkan *database* dari produk yang sudah di-*input*.
+- Untuk melihat objek-objek yang sudah ditambahkan ke dalam `database`, saya menggunakan format HTML, XML, JSON, XML by ID, dan JSON by ID yang fungsi-fungsinya akan ditambahkan ke dalam `views.py`. Pada setiap fungsi yang dibuat, saya membuat variabel `data` yang berisikan seluruh objek dari database yang telah dibuat. Khusus untuk mengembalikan dengan ID, objek pada *database* yang ada akan di-filter sedemikian sehingga hanya terdapat ID sesuai input yang menjadi parameter. Lalu, untuk masing-masing format, saya akan me-*return* fungsi tersebut dengan *parameter* `HttpResponse` yang berbeda:
+
+Untuk XML, parameter yang digunakan dalam `HttpResponse` adalah:
+```
+serializers.serialize("xml", data), content_type="application/xml"
+```
+
+Untuk JSON, parameter yang digunakan dalam `HttpResponse` adalah:
+```
+serializers.serialize("json", data), content_type="application/json"
+```
+
+Agar kelima fungsi tersebut dapat diakses, pada `urls.py`, *list* `url_patterns` akan ditambahkan beberapa `path` sehingga *list* `url_patterns` akan menjadi sebagai berikut:
+```
+urlpatterns = [
+    path('', show_main, name='show_main'),
+    path('create-product', create_product, name='create_product'),
+    path('delete-item', delete_item, name='delete_item'),
+    path('json/', show_json, name='show_json'),
+    path('xml/<int:id>/', show_xml_by_id, name='show_xml_by_id'),
+    path('json/<int:id>/', show_json_by_id, name='show_json_by_id'), 
+    path('xml/', show_xml, name='show_xml')
+]
+```
+
+*Screenshot-screenshot* akses kelima URL menggunakan Postman dapat dilihat di bawah
+![XML](image.png)
+![JSON](image-1.png)
+![XML by ID](image-2.png)
+![JSON by ID](image-3.png)
+![HTML](image-4.png)

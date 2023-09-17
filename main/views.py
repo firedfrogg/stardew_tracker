@@ -2,19 +2,29 @@ from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponseRedirect
 from main.forms import ProductForm
 from main.models import Item
+from django.utils import timezone
 from django.urls import reverse
 from django.http import HttpResponse
 from django.core import serializers
+from django.db.models import Min, Max
 
 
 # Create your views here.
 def show_main(request):
     items = Item.objects.all()
+    item_count = sum(item.amount for item in items)
+    item_total_worth = sum(item.calculate_total() for item in items)
+    earliest_date = items.aggregate(earliest_date=Min('date_added'))['earliest_date'].day
+    latest_date = items.aggregate(latest_date=Max('date_added'))['latest_date'].day
+
     context = {
         'application_name': 'Stardew Valley\'s Item Tracker',
         'name': 'Julian Alex',
         'class': 'PBP F',
-        'items': items
+        'items': items,
+        'item_count': item_count,
+        'item_total_worth': item_total_worth,
+        'days_since_added': latest_date - earliest_date
         #'item_name': 'Pufferfish',
         #'season': 'Summ`er',
         #'favorable_weather': 'Sun',
