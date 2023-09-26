@@ -2,10 +2,24 @@
 
 {% block content %}
     <h1>{{application_name}}</h1>
-    <h5>Made for Platform-based Programming Assignment by {{name}} {{class}} class</h5>
-    <h3>In the past {{days_since_added}} days, you have:</h3>
-    <h3> - Stored {{item_count}} items in the inventory.</h3>
-    <h3> - Gained over {{item_total_worth}} worth of gold. Congratulations!</h3>
+    <h5>Made for Platform-based Programming F Assignment by Julian</h5>
+
+    <h2>Welcome, {{name}}!</h2>
+    {% if days_since_added == 1 %}
+        <h3>In the past day, you have:</h3>
+    {% else %}
+        <h3>In the past {{days_since_added}} days, you have:</h3>
+    {% endif %}
+    {% if item_count == 0 %}
+        <h3> - No item stored yet. Keep tracking your items!</h3>
+    {% else %}
+        <h3> - Stored {{item_count}} items in the inventory.</h3>
+    {% endif %}
+    {% if item_total_worth == 0 %}
+        <h3> - No gold gained yet. Keep tracking your items!</h3>
+    {% else %}
+        <h3> - Gained over {{ item_total_worth }} worth of gold. Congratulations!</h3>
+    {% endif %}
     <h3> </h3>
     <table>
         <tr>
@@ -16,10 +30,13 @@
             <th>Favorable Weather</th>
             <th>Amount</th>
             <th>Date Added</th>
+            <th></th>
+            <th></th>
+            <th></th>
         </tr>
-
+    
         {% comment %} Berikut cara memperlihatkan data produk di bawah baris ini {% endcomment %}
-
+    
         {% for item in items %}
             <tr>
                 <td>{{item.name}}</td>
@@ -29,6 +46,27 @@
                 <td>{{item.favorable_weather}}</td>
                 <td>{{item.amount}}</td>
                 <td>{{item.date_added}}</td>
+                <td>
+                    <a href="{% url 'main:delete_item' id=item.id %}">
+                        <button>
+                            Delete Item
+                        </button>
+                    </a>
+                </td>
+                <td>
+                    <a href="{% url 'main:reduce_amount' id=item.id %}">
+                        <button>
+                            Reduce Amount
+                        </button>
+                    </a>
+                </td>
+                <td>
+                    <a href="{% url 'main:increase_amount' id=item.id %}">
+                        <button>
+                            Increase Amount
+                        </button>
+                    </a>
+                </td>
             </tr>
         {% endfor %}
     </table>
@@ -38,6 +76,14 @@
     <a href="{% url 'main:create_product' %}">
         <button>
             Add New Product
+        </button>
+    </a>
+
+    <h5>Last login session: {{ last_login }}</h5>
+    
+    <a href="{% url 'main:logout' %}">
+        <button>
+            Logout
         </button>
     </a>
 {% endblock content %}
