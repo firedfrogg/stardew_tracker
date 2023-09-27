@@ -1,3 +1,28 @@
+<style>
+    .bordered-table {
+        border-collapse: collapse;
+        width: 100%;
+        border: 3px solid #ddd;
+    }
+
+    .bordered-table th, .bordered-table td {
+        border: 3px solid #ddd;
+        padding: 8px;
+    }
+    h1, h2, h4, h5 {
+    text-align: center;
+    }
+    
+    .button-container {
+    text-align: center;
+    }
+
+    .button-container button {
+        margin: 0 10px;
+    }
+
+</style>
+
 {% extends 'base.html' %}
 
 {% block content %}
@@ -21,7 +46,8 @@
         <h3> - Gained over {{ item_total_worth }} worth of gold. Congratulations!</h3>
     {% endif %}
     <h3> </h3>
-    <table>
+
+    <table class="bordered-table">
         <tr>
             <th>Name</th>
             <th>Price</th>
@@ -30,9 +56,9 @@
             <th>Favorable Weather</th>
             <th>Amount</th>
             <th>Date Added</th>
-            <th></th>
-            <th></th>
-            <th></th>
+            <th>Delete Item</th>
+            <th>Reduce Amount</th>
+            <th>Increase Amount</th>
         </tr>
     
         {% comment %} Berikut cara memperlihatkan data produk di bawah baris ini {% endcomment %}
@@ -49,21 +75,21 @@
                 <td>
                     <a href="{% url 'main:delete_item' id=item.id %}">
                         <button>
-                            Delete Item
+                            Delete
                         </button>
                     </a>
                 </td>
                 <td>
                     <a href="{% url 'main:reduce_amount' id=item.id %}">
                         <button>
-                            Reduce Amount
+                            Reduce
                         </button>
                     </a>
                 </td>
                 <td>
                     <a href="{% url 'main:increase_amount' id=item.id %}">
                         <button>
-                            Increase Amount
+                            Increase
                         </button>
                     </a>
                 </td>
@@ -73,17 +99,19 @@
 
     <br />
 
-    <a href="{% url 'main:create_product' %}">
-        <button>
-            Add New Product
-        </button>
-    </a>
+    <div class="button-container">
+        <a href="{% url 'main:create_product' %}">
+            <button>
+                Add New Product
+            </button>
+        </a>
+
+        <a href="{% url 'main:logout' %}">
+            <button>
+                Logout
+            </button>
+        </a>
+    </div>
 
     <h5>Last login session: {{ last_login }}</h5>
-    
-    <a href="{% url 'main:logout' %}">
-        <button>
-            Logout
-        </button>
-    </a>
 {% endblock content %}

@@ -12,11 +12,11 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
+from datetime import date
 import datetime
 
 
 @login_required(login_url='/login')
-# Create your views here.
 def show_main(request):
     items = Item.objects.filter(user=request.user)
     item_count = sum(item.amount for item in items)
@@ -55,18 +55,23 @@ def create_product(request):
     return render(request, "create_product.html", context)
 
 def delete_item(request, id):
+    today = date.today().day
     item = Item.objects.get(id=id)
     item.delete()
     return redirect('main:show_main')
 
 def reduce_amount(request, id):
+    today = date.today().day
     item = Item.objects.get(id=id)
-    if item.amount > 0:
+    if item.amount > 1:
         item.amount -= 1
         item.save()
+    else:
+        delete_item(request, id)
     return redirect('main:show_main')
 
 def increase_amount(request, id):
+    today = date.today().day
     item = Item.objects.get(id=id)
     item.amount += 1
     item.save()
