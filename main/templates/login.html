@@ -5,41 +5,69 @@
 {% endblock meta %}
 
 {% block content %}
+<style>
+    /* Style for the card container */
+    .card {
+        width: 800px; /* Adjust the width as needed */
+        margin: 0 auto; /* Center-align the card horizontally */
+        padding: 20px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        background-color: #f9f9f9;
+        justify-content: center;
+        margin-top: 190px;
+    }
 
-<div class = "login">
+    /* Style for the form */
+    form {
+        display: flex;
+        flex-direction: column;
+    }
 
+    /* Style for form input fields */
+    input[type="text"], input[type="password"] {
+        margin-bottom: 10px;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 3px;
+    }
+
+    /* Style for the submit button */
+    input[type="submit"] {
+        background-color: #d9a90c;
+        color: #fff;
+        border: none;
+        border-radius: 3px;
+        padding: 10px;
+        cursor: pointer;
+    }
+
+    /* Style for error messages */
+    .error-messages {
+        color: red;
+    }
+</style>
+
+<div class="card">
     <h1>Login</h1>
 
     <form method="POST" action="">
         {% csrf_token %}
-        <table>
-            <tr>
-                <td>Username: </td>
-                <td><input type="text" name="username" placeholder="Username" class="form-control"></td>
-            </tr>
-                    
-            <tr>
-                <td>Password: </td>
-                <td><input type="password" name="password" placeholder="Password" class="form-control"></td>
-            </tr>
-
-            <tr>
-                <td></td>
-                <td><input class="btn login_btn" type="submit" value="Login"></td>
-            </tr>
-        </table>
+        <input type="text" name="username" placeholder="Username" class="form-control">
+        <input type="password" name="password" placeholder="Password" class="form-control">
+        <input class="btn login_btn" type="submit" value="Login">
     </form>
 
     {% if messages %}
-        <ul>
-            {% for message in messages %}
-                <li>{{ message }}</li>
-            {% endfor %}
-        </ul>
-    {% endif %}     
-        
-    Don't have an account yet? <a href="{% url 'main:register' %}">Register Now</a>
+    <ul class="error-messages">
+        {% for message in messages %}
+        <li>{{ message }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
 
+    Don't have an account yet? <a href="{% url 'main:register' %}">Register Now</a>
 </div>
 
 {% endblock content %}
