@@ -127,3 +127,21 @@ path('reduce_amount/<int:id>/', reduce_amount, name='reduce_amount'),
 path('increase_amount/<int:id>/', increase_amount, name='increase_amount'),
 ``` 
 `<int:id>` menandakan `item` yang akan dihapus
+
+# Tugas 5
+## Jelaskan manfaat dari setiap *element selector* dan kapan waktu yang tepat untuk menggunakannya.
+- *Element sector* digunakan untuk menargetkan semua elemen dalam tag HTML tertentu. *Element sector* ini berguna untuk memberikan gaya tampilan kepada semua elemen yang memiliki tag yang sama, seperti untuk memberikan warna kepada teks untuk semua paragraf dalam dokument HTML dengan menggunakan *element selector* `p` untuk mengatur gaya untuk warna tersebut. *Element selector* cocok digunakan ketika seorang *programmer* ingin menerapkan gaya tampilan ke seluruh elemen-elemen dalam satu *tag.
+## Jelaskan HTML5 Tag yang kamu ketahui.
+- `<header>` digunakan untuk menentukan bagian atas dokumen atau begian dalam suatu konten dalam sebuah aplikasi web.
+- `<nav>` digunakan untuk mengelompokkan *link* untuk navigasi, seperti untuk navigasi link.
+- `<button>` digunakan untuk membuat sebuah tombol yang dapat diklik oleh user di sebuah aplikasi web
+- `<footer>` digunakan untuk lai menentukan bagian bawah dokumen atau bagian dalam suatu konten dalam sebuah aplikasi web.
+- `<a>` digunakan untuk membuat *hyperlink* dalam teks di sebuah aplikasi web.
+## Jelaskan perbedaan antara margin dan padding.
+- *Margin* digunakan untuk mengatur letak ruang di luar elemen, entah itu di antara elemen-elemen tersebut dan elemen-elemen lain di sekitar elemen yang diberikan *margin* tersebut.  *Margin* digunakan untuk mengatur jarak antar elemen-elemen lain di luarnya.
+- *Padding* digunakan untuk mengatur letak ruang di dalam elemen, di antara konten-konten elemen dan batas elemen itu sendiri. *Padding* digunakan untuk mengatur jarak antara konten dalam elemen dengan batas elemen tersebut.
+## Jelaskan perbedaan antara framework CSS Tailwind dan Bootstrap. Kapan sebaiknya kita menggunakan Bootstrap daripada Tailwind, dan sebaliknya?
+- Tailwind adalah *framework* CSS yang bersifat *utility-first*. Tailwind digunakan jika seorang programmer ingin membuat tampilan dengan menggabungkan kelas-kelas kecil yang tersedia. Tailwind juga merupakan *framework* dengan fleksibilitas yang tinggi dalam proses desain karena programmer dapat mengkustomisasi setiap aspek tampilan dengan kelas-kelas yang disediakan. Tailwind cocok untuk proyek-proyek yang membutuhkan desain yang sangat rumit tidak terlalu mengandalkan bawaan dari default. Tailwind cocok digunakan untuk *programmer* yang membutuhkan fleksibilitas penuh dalam mendesain sebuah aplikasi web
+- Bootstrap merupakan *framework* CSS yang menyediakan komponen-kompomnen yang sudah siap dipakai. Bootstrap memiliki desain yang responsif dan sangat mudah digunakan sehingga cocok digunakan untuk proyek-proyek dengna waktu yang terbatas. Meskipun Bootstrap tidak sefleksibel Tailwind dalam hal kustomisasi, Bootstrap memungkinkan sebuah pengembangan web secara cepat. Oleh karena itu, Bootstrap cocok digunakan jika seorang *programmer* membutuhkan waktu pengembangan aplikasi web dalam waktu yang singkat dengan komponen-komponen yang siap pakai.
+## Jelaskan bagaimana cara kamu mengimplementasikan checklist di atas secara step-by-step (bukan hanya sekadar mengikuti tutorial).
+- Untuk setiap tampilan aplikasi web (*login, main, register, create product*), saya menggunakan pendekatan dengan tampilan `Card` untuk mengubah tampilan sebelumnya menggunakan table. Selain itu, saya mengubah *margin* pada setiap `Card` agar dapat digunakan di tengah dan *padding* untuk elemen-elemen di dalam `Card` agar tidak terlalu dekat satu dengan yang lain. Untuk warna tampilan aplikasi web, saya menggunakan warna kuning `#d9a90c` dan warna putih `#fff`. Untuk tampilan aplikasi web *main*, saya menggunakan `navbar` untuk menggantikan fungsi-fungsi `add product` dan `logout` di button yang sebelumnya diletakkan di bawah. Lalu, pada setiap `card` di tampilan aplikasi web `main`, saya menggunakan kode CSS `card-container` untuk memastikan bahwa tampilan `Card` tersebut berada di tengah.

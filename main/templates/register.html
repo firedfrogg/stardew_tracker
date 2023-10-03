@@ -5,30 +5,65 @@
 {% endblock meta %}
 
 {% block content %}  
+<style>
+    /* Style for the card container */
+    .card {
+        width: 800px; /* Adjust the width as needed */
+        margin: 0 auto; /* Center-align the card horizontally */
+        padding: 20px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        background-color: #f9f9f9;
+    }
 
-<div class = "login">
-    
-    <h1>Register</h1>  
+    /* Style for the form */
+    form {
+        display: flex;
+        flex-direction: column;
+    }
 
-        <form method="POST" >  
-            {% csrf_token %}  
-            <table>  
-                {{ form.as_table }}  
-                <tr>  
-                    <td></td>
-                    <td><input type="submit" name="submit" value="Daftar"/></td>  
-                </tr>  
-            </table>  
-        </form>
+    /* Style for form input fields */
+    input[type="text"], input[type="password"] {
+        margin-bottom: 10px;
+        padding: 5px;
+        border: 1px solid #ccc;
+        border-radius: 3px;
+    }
 
-    {% if messages %}  
-        <ul>   
-            {% for message in messages %}  
-                <li>{{ message }}</li>  
-                {% endfor %}  
-        </ul>   
+    /* Style for the submit button */
+    input[type="submit"] {
+        background-color: #d9a90c;
+        color: #fff;
+        border: none;
+        border-radius: 3px;
+        padding: 10px;
+        cursor: pointer;
+    }
+
+    /* Style for error messages */
+    .error-messages {
+        color: red;
+    }
+</style>
+
+<div class="card">
+    <h1>Register</h1>
+
+    <form method="POST">
+        {% csrf_token %}
+        {{ form.as_p }}
+
+        <input type="submit" name="submit" value="Daftar"/>
+    </form>
+
+    {% if messages %}
+    <ul class="error-messages">
+        {% for message in messages %}
+        <li>{{ message }}</li>
+        {% endfor %}
+    </ul>
     {% endif %}
-
-</div>  
+</div>
 
 {% endblock content %}
