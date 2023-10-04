@@ -6,10 +6,15 @@
 
 {% block content %}  
 <style>
-    /* Style for the card container */
+    .container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+    }
+
     .card {
-        width: 800px; /* Adjust the width as needed */
-        margin: 0 auto; /* Center-align the card horizontally */
+        width: 800px;
         padding: 20px;
         border: 1px solid #ccc;
         border-radius: 5px;
@@ -17,13 +22,11 @@
         background-color: #f9f9f9;
     }
 
-    /* Style for the form */
     form {
         display: flex;
         flex-direction: column;
     }
 
-    /* Style for form input fields */
     input[type="text"], input[type="password"] {
         margin-bottom: 10px;
         padding: 5px;
@@ -31,7 +34,6 @@
         border-radius: 3px;
     }
 
-    /* Style for the submit button */
     input[type="submit"] {
         background-color: #d9a90c;
         color: #fff;
@@ -41,29 +43,31 @@
         cursor: pointer;
     }
 
-    /* Style for error messages */
+
     .error-messages {
         color: red;
     }
 </style>
 
-<div class="card">
-    <h1>Register</h1>
+<div class="container">
+    <div class="card">
+        <h1>Register</h1>
 
-    <form method="POST">
-        {% csrf_token %}
-        {{ form.as_p }}
+        <form method="POST">
+            {% csrf_token %}
+            {{ form.as_p }}
 
-        <input type="submit" name="submit" value="Daftar"/>
-    </form>
+            <input type="submit" name="submit" value="Daftar"/>
+        </form>
 
-    {% if messages %}
-    <ul class="error-messages">
-        {% for message in messages %}
-        <li>{{ message }}</li>
-        {% endfor %}
-    </ul>
-    {% endif %}
+        {% if messages %}
+        <ul class="error-messages">
+            {% for message in messages %}
+            <li>{{ message }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+    </div>
 </div>
 
 {% endblock content %}
