@@ -6,26 +6,27 @@
 
 {% block content %}
 <style>
-    /* Style for the card container */
+    .container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+    }
+
     .card {
-        width: 800px; /* Adjust the width as needed */
-        margin: 0 auto; /* Center-align the card horizontally */
+        width: 800px;
         padding: 20px;
         border: 1px solid #ccc;
         border-radius: 5px;
         box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         background-color: #f9f9f9;
-        justify-content: center;
-        margin-top: 190px;
     }
 
-    /* Style for the form */
     form {
         display: flex;
         flex-direction: column;
     }
 
-    /* Style for form input fields */
     input[type="text"], input[type="password"] {
         margin-bottom: 10px;
         padding: 10px;
@@ -33,7 +34,6 @@
         border-radius: 3px;
     }
 
-    /* Style for the submit button */
     input[type="submit"] {
         background-color: #d9a90c;
         color: #fff;
@@ -43,31 +43,32 @@
         cursor: pointer;
     }
 
-    /* Style for error messages */
     .error-messages {
         color: red;
     }
 </style>
 
-<div class="card">
-    <h1>Login</h1>
+<div class="container">
+    <div class="card">
+        <h1>Login</h1>
 
-    <form method="POST" action="">
-        {% csrf_token %}
-        <input type="text" name="username" placeholder="Username" class="form-control">
-        <input type="password" name="password" placeholder="Password" class="form-control">
-        <input class="btn login_btn" type="submit" value="Login">
-    </form>
+        <form method="POST" action="">
+            {% csrf_token %}
+            <input type="text" name="username" placeholder="Username" class="form-control">
+            <input type="password" name="password" placeholder="Password" class="form-control">
+            <input class="btn login_btn" type="submit" value="Login">
+        </form>
 
-    {% if messages %}
-    <ul class="error-messages">
-        {% for message in messages %}
-        <li>{{ message }}</li>
-        {% endfor %}
-    </ul>
-    {% endif %}
+        {% if messages %}
+        <ul class="error-messages">
+            {% for message in messages %}
+            <li>{{ message }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
 
-    Don't have an account yet? <a href="{% url 'main:register' %}">Register Now</a>
+        Don't have an account yet? <a href="{% url 'main:register' %}">Register Now</a>
+    </div>
 </div>
 
 {% endblock content %}
