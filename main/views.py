@@ -13,6 +13,9 @@ from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from datetime import date
+from django.views.decorators.csrf import csrf_exempt
+from django.http import HttpResponseNotFound, JsonResponse
+from django.views.decorators.http import require_http_methods
 import datetime
 
 
@@ -125,3 +128,70 @@ def show_xml_by_id(request, id):
 def show_json_by_id(request, id):
     data = Item.objects.filter(pk=id)
     return HttpResponse(serializers.serialize("json", data), content_type="application/json")
+
+def get_product_json(request):
+    product_item = Item.objects.filter(user=request.user)
+    return HttpResponse(serializers.serialize('json', product_item))
+
+def get_updated_data(request):
+    user = request.user
+    items = Item.objects.filter(user=user)
+    
+    item_count = sum(item.amount for item in items)
+    item_total_worth = sum(item.calculate_total() for item in items)
+    earliest_date = items.aggregate(earliest_date=Min('date_added'))['earliest_date']
+    latest_date = items.aggregate(latest_date=Max('date_added'))['latest_date']
+
+    if earliest_date and latest_date:
+        days_since_added = (latest_date - earliest_date).days + 1
+    else:
+        days_since_added = 0
+
+    return JsonResponse({
+        'days_since_added': days_since_added,
+        'item_count': item_count,
+        'item_total_worth': item_total_worth
+    })
+
+
+@csrf_exempt
+def add_product_ajax(request):
+    if request.method == 'POST':
+        name = request.POST.get("name")
+        price = request.POST.get("price")
+        description = request.POST.get("description")
+        user = request.user
+        amount = request.POST.get("amount");
+        favorable_weather = request.POST.get("favorable_weather");
+        season = request.POST.get("season");
+
+        new_product = Item(name=name, price=price, description=description, user=user,
+                           amount=amount, favorable_weather=favorable_weather, season=season)
+        new_product.save()
+
+        return HttpResponse(b"CREATED", status=201)
+
+    return HttpResponseNotFound()
+
+@csrf_exempt
+def increase_amount_ajax(request):
+    if request.method == 'POST':
+        item_id = request.POST.get("id")
+        try:
+            item = Item.objects.get(id=item_id)
+            item.amount += 1
+            item.save()
+            return JsonResponse({'status': 'success', 'message': 'Amount increased successfully', 'new_amount': item.amount})
+        except Item.DoesNotExist:
+            return JsonResponse({'status': 'error', 'message': 'Item not found'}, status=404)
+    return HttpResponseNotFound()
+
+@csrf_exempt
+@require_http_methods(['DELETE'])
+def delete_item_ajax(request, id):
+    try:
+        item = Item.objects.get(pk=id)
+        item.delete()
+        return JsonResponse({'status': 'success', 'message': 'Item deleted successfully'})
+    except Item.DoesNotExist:
+        return JsonResponse({'status': 'error', 'message': 'Item not found'}, status=404)
