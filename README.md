@@ -145,3 +145,110 @@ path('increase_amount/<int:id>/', increase_amount, name='increase_amount'),
 - Bootstrap merupakan *framework* CSS yang menyediakan komponen-kompomnen yang sudah siap dipakai. Bootstrap memiliki desain yang responsif dan sangat mudah digunakan sehingga cocok digunakan untuk proyek-proyek dengna waktu yang terbatas. Meskipun Bootstrap tidak sefleksibel Tailwind dalam hal kustomisasi, Bootstrap memungkinkan sebuah pengembangan web secara cepat. Oleh karena itu, Bootstrap cocok digunakan jika seorang *programmer* membutuhkan waktu pengembangan aplikasi web dalam waktu yang singkat dengan komponen-komponen yang siap pakai.
 ## Jelaskan bagaimana cara kamu mengimplementasikan checklist di atas secara step-by-step (bukan hanya sekadar mengikuti tutorial).
 - Untuk setiap tampilan aplikasi web (*login, main, register, create product*), saya menggunakan pendekatan dengan tampilan `Card` untuk mengubah tampilan sebelumnya menggunakan table. Selain itu, saya mengubah *margin* pada setiap `Card` agar dapat digunakan di tengah dan *padding* untuk elemen-elemen di dalam `Card` agar tidak terlalu dekat satu dengan yang lain. Untuk warna tampilan aplikasi web, saya menggunakan warna kuning `#d9a90c` dan warna putih `#fff`. Untuk tampilan aplikasi web *main*, saya menggunakan `navbar` untuk menggantikan fungsi-fungsi `add product` dan `logout` di button yang sebelumnya diletakkan di bawah. Lalu, pada setiap `card` di tampilan aplikasi web `main`, saya menggunakan kode CSS `card-container` untuk memastikan bahwa tampilan `Card` tersebut berada di tengah.
+
+# Tugas 6
+## Jelaskan perbedaan antara asynchronous programming dengan *synchronous programming*.
+- ***Synchronous Programming*** adalah cara pemrograman di mana operasi dieksekusi satu demi satu. Sebuah operasi harus menyelesaikan eksekusinya sebelum operasi berikutnya dimulai. Hal ini dapat menyebabkan pemblokiran atau tunggu waktu yang lama jika operasi memerlukan banyak waktu.
+- ***Asynchronous Programming*** memungkinkan operasi untuk berjalan tanpa menunggu operasi sebelumnya selesai. Hal ini meningkatkan efisiensi dan kinerja, terutama dalam kasus di mana operasi dapat memakan waktu yang lama namun tidak perlu menunggu operasi lain.
+## Dalam penerapan JavaScript dan AJAX, terdapat penerapan paradigma *event-driven programming*.
+- ***Event-Driven Programming*** adalah paradigma di mana alur program ditentukan oleh peristiwa seperti input pengguna, respons sistem, atau pesan dari program lain. Ini sangat umum dalam pengembangan aplikasi GUI dan aplikasi berbasis web. Dalam penerapan JavaScript dan AJAX, saat pengguna mengklik sebuah tombol (event), sebuah fungsi (event handler) dapat dipicu untuk mengirim permintaan AJAX ke server dan menerima respons tanpa perlu memuat ulang halaman.
+## Jelaskan penerapan *asynchronous programming* pada AJAX.
+- AJAX (Asynchronous JavaScript and XML) sendiri merupakan teknik yang memanfaatkan pemrograman asinkron. Dengan AJAX, web apps dapat mengirim dan menerima data dari server secara asinkron tanpa mengganggu tampilan dan perilaku halaman yang sedang dilihat. Ini memungkinkan halaman untuk diperbarui dengan cepat dan dinamis tanpa perlu memuat ulang halaman.
+## Pada PBP kali ini, penerapan AJAX dilakukan dengan menggunakan Fetch API daripada *library* jQuery. Bandingkanlah kedua teknologi tersebut dan tuliskan pendapat kamu teknologi manakah yang lebih baik untuk digunakan.
+- **Fetch API** adalah teknologi modern yang memberikan antarmuka untuk mengambil sumber daya melalui jaringan. Ia lebih fleksibel dan kuat dibandingkan dengan pendekatan AJAX yang ada di jQuery.
+- **jQuery AJAX** telah lama ada dan memberikan cara yang lebih sederhana untuk melakukan AJAX di masa lalu. Namun, dengan pertumbuhan ES6 dan API web modern, banyak dari fitur-fiturnya kini dapat ditemukan secara native dalam JavaScript.
+- Meskipun jQuery AJAX memberikan kemudahan bagi para pengembang di masa lalu, saya cenderung lebih memilih Fetch API untuk kebutuhan modern karena Fetch API adalah standar modern dan native dalam JavaScript tanpa memerlukan library tambahan. Selain itu, Fetch juga  memberikan kontrol yang lebih besar atas permintaan dan respons. Dengan dukungan Promise, Fetch API mempermudah penanganan operasi asinkron.
+## Jelaskan bagaimana cara kamu mengimplementasikan *checklist* di atas secara step-by-step (bukan hanya sekadar mengikuti tutorial).
+- Untuk mengubah kode *cards* data item dengan AJAX GET, saya membuat sebuah *function* yang bernama `get_product_json` yang akan mengambil `item` dari username dan mengembalikannya sebagai format JSON dalam respon HTTP. Selanjutnya, saya menghubungkan *function* tersebut ke *template* dengan `urls.py` yang berisikan `path('get-product/', get_product_json, name='get_product_json')`. Setelah itu, pada `main.html`, saya membuat *async function* untuk melakukkan *fetch* terhadap `get_product_json` yang terdapat pada `views.py`. Dari `async function` tersebut, saya memindahkan kode untuk men-*generate* `cards` dari Tugas 5 ke Tugas 6 ke dalam *function* baru yang bernama `generateCards` dengan kode sebagai berikut lalu memanggil *function* tersebut di dalam `<script>`:
+```
+const products = await getProducts();
+const cardContainer = document.getElementById("card-container");
+
+cardContainer.innerHTML = ""; // Clear existing cards
+
+products.forEach((item) => {
+    const card = document.createElement("div");
+    card.className = "card border-dark mb-3 col-md-4";
+    card.innerHTML = `
+        <div class="card-body">
+            <h5 class="card-title">${item.fields.name}</h5>
+            <button class="btn btn-info show-description-btn">Show Description</button>
+            <div class="card-description" style="display: none;">
+                <p>${item.fields.description}</p>
+            </div>
+            <p class="card-text">Price: $${item.fields.price}</p>
+            <p class="card-text">Favorable Weather: ${item.fields.favorable_weather}</p>
+            <p class="card-text">Amount: ${item.fields.amount}</p>
+            <p class="card-text">Date Added: ${item.fields.date_added}</p>
+            <p class="card-text">Season: ${item.fields.season}</p>
+            <button class="btn btn-danger delete-item-btn" data-id="${item.pk}">Delete</button>
+
+        </div>
+    `;
+
+    cardContainer.appendChild(card);
+
+    // Add event listener to each "Show Description" button
+    const showDescriptionButton = card.querySelector('.show-description-btn');
+    showDescriptionButton.addEventListener('click', () => {
+        const description = card.querySelector('.card-description');
+        if (description.style.display === 'none' || description.style.display === '') {
+            description.style.display = 'block';
+            showDescriptionButton.textContent = 'Hide Description';
+        } else {
+            description.style.display = 'none';
+            showDescriptionButton.textContent = 'Show Description';
+        }
+    });
+});
+```
+- Untuk menambahkan `item` pada `user` yang sedang `login`, pertama-tama, saya membuat method `add_product_ajax` dengan *decorator* `@csrf_exempt` untuk menerima *request* POST tanpa perlu melakukan validasi CSRF token. Method ini menggunakan *method* `POST` dari `request` yang akan meminta `user` untuk menginput informasi-informasi dari setiap `item` sesuai yang ada di `models.py`. Setelah itu, saya menghubungkannya ke ke `urls.py` dengan kode `path('create-product-ajax/', add_product_ajax, name='add_product_ajax')`. Setelah itu, saya membuat method `add_product` pada `main.html` yang akan melakukan *fetch* ke `add_product_ajax` terlebih daulu lalu membuat `modal` *form*-nya. Kode untuk `modal`-nya adalah sebagai berikut:
+```
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Add New Product</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="form" onsubmit="return false;">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="name" class="col-form-label">Name:</label>
+                        <input type="text" class="form-control" id="name" name="name"></input>
+                    </div>
+                    <div class="mb-3">
+                        <label for="price" class="col-form-label">Price:</label>
+                        <input type="number" class="form-control" id="price" name="price"></input>
+                    </div>
+                    <div class="mb-3">
+                        <label for="description" class="col-form-label">Description:</label>
+                        <textarea class="form-control" id="description" name="description"></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="name" class="col-form-label">Amount:</label>
+                        <input type="text" class="form-control" id="amount" name="amount"></input>
+                    </div>
+                    <div class="mb-3">
+                        <label for="name" class="col-form-label">Favorable Weather:</label>
+                        <input type="text" class="form-control" id="favorable_weather" name="favorable_weather"></input>
+                    </div>
+                    <div class="mb-3">
+                        <label for="name" class="col-form-label">Season:</label>
+                        <input type="text" class="form-control" id="season" name="season"></input>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="button_add" data-bs-dismiss="modal">Add Product</button>
+            </div>
+        </div>
+    </div>
+</div>
+```
+
+Ketika responnya sudah valid, *function* akan melakukan pemanggilan ulang terhadap `cards` untuk me-*refresh* tampilan dengan penambahan `card` yang sudah dibuat oleh `user`. Untuk memanggil function tersebut, saya menggunakan kode `document.getElementById("button_add").onclick = addProduct` yang saya taruh pada *navbar* untuk *Create Product* dengan `href="{% url 'main:create_product' %}"`. Setelah itu, saya menambahkan method `get_updated_data` yang akan me-*refresh* jumlah *item* yang ada pada *user* dan total harga dari keseluruhan item tersebut.
+ 
+- Untuk menghapus `item` yang ada di `user` menggunakan AJAX, saya membuat *function* di `views.py` terlebih dahulu bernama `delete_item_ajax` dengan menggunakan `@require_http_methods(['DELETE'])` dan `@csrf_exempt` *decorator*. *Function* ini akan mengambil terlebih dahulu *item* yang akan di-klik sesuai *input* *user* dan menghapusnya. *Function* ini saya hubungkan dengan `main.html` melalui `urls.py` dengan kode `path('delete_item_ajax/<int:id>/', delete_item_ajax, name='delete_item_ajax')`. Setelah itu, pada `main_html`, saya menambahkan `item.pk` pada *button* delete yang akan me-*refer*  kepada *primary key* dari *object* yang akan dihapus.

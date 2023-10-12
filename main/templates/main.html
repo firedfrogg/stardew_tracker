@@ -43,19 +43,27 @@
         background-color: #fff;
         box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
         max-width: 300px;
+        width: calc(25% - 10px);
     }
 
     .card-container {
-        margin-top:100px;
-        text-align: center;
+        margin-top: 100px;
         display: flex;
-        overflow-x: auto;
-        align-items:center;
-        justify-content: center;
+        flex-wrap: wrap;
+        justify-content: space-around;
+        gap: 10px;
     }
+
+
 
     .custom-navbar {
         background-color: #d9a90c;
+        position: fixed;   /* This will make the navbar fixed at the top */
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 1000;
+        width: 100%;
     }
 
     .card-container .card:last-child  {
@@ -71,7 +79,6 @@
     }
 
     .footer-text {
-        position: fixed;
         bottom: 0;
         left: 0;
         right: 0;
@@ -95,79 +102,53 @@
 {% block content %}
     <nav class="navbar navbar-expand-lg custom-navbar">
         <div class="container-fluid">
-        <a class="navbar-brand" href="#" style="color: #fff;">Stardew Valley's Item Tracker</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav">
-            <li class="nav-item">
-                <a class="nav-link" href="{% url 'main:create_product' %} ">Create Product</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="{% url 'main:logout' %}">Logout</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link disabled" aria-disabled="true"> {{ name }}</a>
-            </li>
-            </ul>
-        </div>
+            <a class="navbar-brand" href="#" style="color: #fff;">Stardew Valley's Item Tracker</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" data-bs-toggle="modal" data-bs-target="#exampleModal" href="{% url 'main:create_product' %}">Create Product</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'main:logout' %}">Logout</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link disabled" aria-disabled="true">{{ name }}</a>
+                    </li>
+                </ul>
+            </div>
         </div>
     </nav>
 
     <h3>Welcome, {{name}}!</h3>
     {% if days_since_added == 1 %}
-        <h5>In the past day, you have:</h5>
+    <h5>In the past day, you have:</h5>
     {% else %}
         <h5>In the past {{days_since_added}} days, you have:</h5>
     {% endif %}
     {% if item_count == 0 %}
-        <h5> No item stored yet. Keep tracking your items!</h5>
+        <h5 id="item-count">No item stored yet. Keep tracking your items!</h5>
     {% else %}
-        <h5> Stored {{item_count}} items in the inventory.</h5>
+        <h5 id="item-count">Stored {{item_count}} items in the inventory.</h5>
     {% endif %}
     {% if item_total_worth == 0 %}
-        <h5> No gold gained yet. Keep tracking your items!</h5>
+        <h5 id="item-total-worth">No gold gained yet. Keep tracking your items!</h5>
     {% else %}
-        <h5> Gained over {{ item_total_worth }} worth of gold. Congratulations!</h5>
+        <h5 id="item-total-worth">Gained over {{ item_total_worth }} worth of gold. Congratulations!</h5>
     {% endif %}
 
+
+    {% comment %}
+    <table id="product_table"></table>
+    {% endcomment %}
+
     <div class="container">
-    <div class="card-container">
-        {% for item in items %}
-        <div class="card border-dark mb-3 col-md-4">
-            <div class="card-body">
-                <h5 class="card-title">{{item.name}}</h5>
-                <button class="btn btn-info show-description-btn">Show Description</button>
-                <div class="card-description" style="display: none;">
-                    <p>{{item.description}}</p>
-                </div>
-                <p class="card-text">Price: ${{item.price}}</p>
-                <p class="card-text">Favorable Weather: {{item.favorable_weather}}</p>
-                <p class="card-text">Amount: {{item.amount}}</p>
-                <p class="card-text">Date Added: {{item.date_added}}</p>
-                <div class="card-button-container">
-                    <a href="{% url 'main:delete_item' id=item.id %}">
-                        <button class="btn btn-danger">
-                            Delete
-                        </button>
-                    </a>
-                    <a href="{% url 'main:reduce_amount' id=item.id %}" >
-                        <button class="btn btn-warning">
-                            Reduce
-                        </button>
-                    </a>
-                    <a href="{% url 'main:increase_amount' id=item.id %}">
-                        <button class="btn btn-success">
-                            Increase
-                        </button>
-                    </a>
-                </div>
-            </div>
+        <div class="card-container" id="card-container">
         </div>
-        {% endfor %}
     </div>
-    
+
     <br />
 
     <div class="footer-text">
@@ -175,7 +156,71 @@
         <h6>Made for Platform-based Programming F Assignment by Julian</h6>
     </div>
 
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Add New Product</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="form" onsubmit="return false;">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label for="name" class="col-form-label">Name:</label>
+                            <input type="text" class="form-control" id="name" name="name"></input>
+                        </div>
+                        <div class="mb-3">
+                            <label for="price" class="col-form-label">Price:</label>
+                            <input type="number" class="form-control" id="price" name="price"></input>
+                        </div>
+                        <div class="mb-3">
+                            <label for="description" class="col-form-label">Description:</label>
+                            <textarea class="form-control" id="description" name="description"></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="name" class="col-form-label">Amount:</label>
+                            <input type="text" class="form-control" id="amount" name="amount"></input>
+                        </div>
+                        <div class="mb-3">
+                            <label for="name" class="col-form-label">Favorable Weather:</label>
+                            <input type="text" class="form-control" id="favorable_weather" name="favorable_weather"></input>
+                        </div>
+                        <div class="mb-3">
+                            <label for="name" class="col-form-label">Season:</label>
+                            <input type="text" class="form-control" id="season" name="season"></input>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="button_add" data-bs-dismiss="modal">Add Product</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script>
+
+        document.addEventListener('click', function(e) {
+            if (e.target && e.target.classList.contains('delete-item-btn')) {
+                let itemId = e.target.getAttribute('data-id');
+                deleteItem(itemId);
+            }
+        });
+
+        function deleteItem(id) {
+            fetch(`/delete_item_ajax/${id}/`, {
+                method: 'DELETE',
+            })
+            .then(response => {
+                if (response.ok) {
+                    generateCards();
+                } else {
+                    console.error('Failed to delete item.');
+                }
+            });
+        }
         const showDescriptionButtons = document.querySelectorAll('.show-description-btn');
     
         showDescriptionButtons.forEach(button => {
@@ -192,6 +237,96 @@
                 }
             });
         });
+
+        async function getProducts() {
+            return fetch("{% url 'main:get_product_json' %}").then((res) => res.json());
+        }
+
+        async function generateCards() {
+            const products = await getProducts();
+            const cardContainer = document.getElementById("card-container");
+
+            cardContainer.innerHTML = ""; // Clear existing cards
+
+            products.forEach((item) => {
+                const card = document.createElement("div");
+                card.className = "card border-dark mb-3 col-md-4";
+                card.innerHTML = `
+                    <div class="card-body">
+                        <h5 class="card-title">${item.fields.name}</h5>
+                        <button class="btn btn-info show-description-btn">Show Description</button>
+                        <div class="card-description" style="display: none;">
+                            <p>${item.fields.description}</p>
+                        </div>
+                        <p class="card-text">Price: $${item.fields.price}</p>
+                        <p class="card-text">Favorable Weather: ${item.fields.favorable_weather}</p>
+                        <p class="card-text">Amount: ${item.fields.amount}</p>
+                        <p class="card-text">Date Added: ${item.fields.date_added}</p>
+                        <p class="card-text">Season: ${item.fields.season}</p>
+                        <button class="btn btn-danger delete-item-btn" data-id="${item.pk}">Delete</button>
+
+                    </div>
+                `;
+
+                cardContainer.appendChild(card);
+
+                // Add event listener to each "Show Description" button
+                const showDescriptionButton = card.querySelector('.show-description-btn');
+                showDescriptionButton.addEventListener('click', () => {
+                    const description = card.querySelector('.card-description');
+                    if (description.style.display === 'none' || description.style.display === '') {
+                        description.style.display = 'block';
+                        showDescriptionButton.textContent = 'Hide Description';
+                    } else {
+                        description.style.display = 'none';
+                        showDescriptionButton.textContent = 'Show Description';
+                    }
+                });
+            });
+        }
+
+
+        generateCards();
+        function addProduct() {
+            fetch("{% url 'main:add_product_ajax' %}", {
+                method: "POST",
+                body: new FormData(document.querySelector('#form'))
+            })
+            .then(response => {
+                if (response.ok) {
+                    generateCards();
+                    document.getElementById("form").reset();
+                } else {
+                    throw new Error("Failed to add product");
+                }
+            })
+            .catch(error => console.error("Error:", error));
+        }
+
+
+        function updateData() {
+            fetch("{% url 'main:get_updated_data' %}")
+                .then(response => response.json())
+                .then(data => {
+                    // Update item_count
+                    document.getElementById("item-count").textContent = (data.item_count === 0)
+                        ? "No item stored yet. Keep tracking your items!"
+                        : `Stored ${data.item_count} items in the inventory.`;
+                    document.getElementById("item-total-worth").textContent = (data.item_total_worth === 0)
+                        ? "No gold gained yet. Keep tracking your items!"
+                        : `Gained over ${data.item_total_worth} worth of gold. Congratulations!`;
+                    document.getElementById("days-since-added").textContent = (data.days_since_added === 1)
+                        ? "In the past day, you have:"
+                        : `In the past ${data.days_since_added} days, you have:`;
+
+                })
+                .catch(error => console.error("Error fetching updated data:", error));
+        }
+
+        const updateInterval = 600;
+        setInterval(updateData, updateInterval);
+
+        document.getElementById("button_add").onclick = addProduct
     </script>
 
 {% endblock content %}
