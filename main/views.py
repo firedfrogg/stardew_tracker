@@ -68,7 +68,7 @@ def reduce_amount(request, id):
     today = date.today().day
     item = Item.objects.get(id=id)
     if item.amount > 1:
-        item.amount -= 1
+        item.amount = item.amount - 1
         item.save()
     else:
         delete_item(request, id)
