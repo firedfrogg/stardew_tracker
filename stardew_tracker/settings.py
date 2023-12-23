@@ -40,6 +40,7 @@ SESSION_COOKIE_SAMESITE = 'None'
 # Application definition
 
 INSTALLED_APPS = [
+    'corsheaders',
     'authentication',
     'django.contrib.admin',
     'django.contrib.auth',
